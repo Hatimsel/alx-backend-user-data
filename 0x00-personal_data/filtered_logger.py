@@ -74,14 +74,13 @@ def main() -> None:
     """
     db = get_db()
     cursor = db.cursor()
-    query = 'SELECT name, email, phone, ssn, password FROM users'
+    query = 'SELECT * FROM users'
     cursor.execute(query)
 
     result = cursor.fetchall()
 
     logger = get_logger()
-    for row in result:
-        logger.info(row)
+    logger.info(';'.join(row) for row in result)
 
     cursor.close()
     db.close()
