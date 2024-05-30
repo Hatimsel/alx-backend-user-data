@@ -45,6 +45,7 @@ def get_logger() -> logging.Logger:
     """Creating a logger object"""
     logger = logging.getLogger('user_data')
     logger.setLevel(logging.INFO)
+    logger.propagate = False
 
     stream_handler = logging.StreamHandler()
     stream_handler.setFormatter(RedactingFormatter(fields=PII_FIELDS))
@@ -57,9 +58,9 @@ def get_logger() -> logging.Logger:
 def get_db() -> MySQLConnection:
     """Returns a connector to the database"""
     db_name = os.getenv('PERSONAL_DATA_DB_NAME')
-    db_user = os.getenv('PERSONAL_DATA_DB_USERNAME')
-    db_pass = os.getenv('PERSONAL_DATA_DB_PASSWORD')
-    db_host = os.getenv('PERSONAL_DATA_DB_HOST')
+    db_user = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    db_pass = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    db_host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
 
     try:
         connection = MySQLConnection(user=db_user, password=db_pass,
