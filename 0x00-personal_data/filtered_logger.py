@@ -62,14 +62,9 @@ def get_db() -> MySQLConnection:
     db_pass = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
     db_host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
 
-    try:
-        connection = MySQLConnection(user=db_user, password=db_pass,
-                                     host=db_host, database=db_name)
-        return connection
-
-    except Error as e:
-        print(f'Error: {e}')
-        return None
+    connection = MySQLConnection(user=db_user, password=db_pass,
+                                 host=db_host, database=db_name)
+    return connection
 
 
 def main() -> None:
@@ -84,10 +79,12 @@ def main() -> None:
 
     result = cursor.fetchall()
 
-    instance = RedactingFormatter(list(PII_FIELDS))
+    logger = get_logger()
     for row in result:
-        row = instance.format(row)
-        print(row)
+        logger.info(row)
+
+    cursor.close()
+    db.close()
 
 
 if __name__ == '__main__':
