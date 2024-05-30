@@ -69,3 +69,24 @@ def get_db() -> MySQLConnection:
     except Error as e:
         print(f'Error: {e}')
         return None
+
+
+def main() -> None:
+    """
+    Gets the db connection and retrives all
+    rows in the user table
+    """
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute('SELECT * FROM users')
+
+    result = cursor.fetchall()
+
+    instance = RedactingFormatter(list(PII_FIELDS))
+    for row in result:
+        row = instance.format(row)
+        print(row)
+
+
+if __name__ == '__main__':
+    main()
