@@ -79,7 +79,8 @@ def main() -> None:
     """
     db = get_db()
     cursor = db.cursor()
-    cursor.execute('SELECT * FROM users')
+    query = 'SELECT name, email, phone, ssn, password FROM users'
+    cursor.execute(query)
 
     result = cursor.fetchall()
 
