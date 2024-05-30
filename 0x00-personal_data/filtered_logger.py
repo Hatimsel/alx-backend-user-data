@@ -30,13 +30,7 @@ class RedactingFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         """Filters values in incoming log records"""
-        logging.basicConfig(format=self.FORMAT)
+        org_msg = super().format(record)
 
-        new_record = filter_datum(self.fields, self.REDACTION,
-                                  record.msg, self.SEPARATOR)
-        
-        logging.info(new_record)
-        # org_msg = super().format(record)
-
-        # return filter_datum(self.fields, self.REDACTION,
-        #                     org_msg, self.SEPARATOR)
+        return filter_datum(self.fields, self.REDACTION,
+                            org_msg, self.SEPARATOR)
