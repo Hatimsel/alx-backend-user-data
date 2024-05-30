@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Logging in Python"""
 import logging
-from mysql.connector.connection import MySQLConnection
+from mysql.connector import MySQLConnection, Error
 import os
 import re
 from typing import List
@@ -61,7 +61,11 @@ def get_db() -> MySQLConnection:
     db_pass = os.getenv('PERSONAL_DATA_DB_PASSWORD')
     db_host = os.getenv('PERSONAL_DATA_DB_HOST')
 
-    connection = MySQLConnection(user=db_user, password=db_pass,
+    try:
+        connection = MySQLConnection(user=db_user, password=db_pass,
                                  host=db_host, database=db_name)
+        return connection
 
-    return connection
+    except Error as e:
+        print(f'Error: {e}')
+        return None
