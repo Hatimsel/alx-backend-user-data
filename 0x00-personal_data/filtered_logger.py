@@ -63,7 +63,7 @@ def get_db() -> MySQLConnection:
 
     try:
         connection = MySQLConnection(user=db_user, password=db_pass,
-                                 host=db_host, database=db_name)
+                                     host=db_host, database=db_name)
         return connection
 
     except Error as e:
