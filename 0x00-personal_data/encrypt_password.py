@@ -3,7 +3,7 @@
 Encrypting passwords
 """
 import bcrypt
-from bcrypt import hashpw, checkpw
+from bcrypt import hashpw
 
 
 def hash_password(password: str) -> bytes:
@@ -18,4 +18,4 @@ def hash_password(password: str) -> bytes:
 
 def is_valid(hashed_password: bytes, password: str) -> bool:
     """Checking the validity of a password"""
-    return checkpw(password.encode(), hashed_password)
+    return bcrypt.checkpw(password.encode(), hashed_password)
