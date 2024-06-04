@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """BasicAuth class"""
 from .auth import Auth
-from models.base import Base
 from models.user import User
 from typing import TypeVar
 import base64
@@ -53,5 +52,26 @@ class BasicAuth(Auth):
             if user:
                 if user[0].is_valid_password(user_pwd):
                     return user[0]
-            return None
         return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """
+        Overload AUth and retrieve the
+        User instance for a request
+        """
+        if request:
+            authorization_header = request.headers['Authorization']
+            base64_auth_header = self.extract_base64_authorization_header(
+                authorization_header
+                )
+            decoded_auth_header = self.decode_base64_authorization_header(
+                base64_auth_header
+                )
+            user_credentials = self.extract_user_credentials(
+                decoded_auth_header
+                )
+            user = self.user_object_from_credentials(
+                user_credentials[0], user_credentials[1]
+                )
+
+            return user if user else None
