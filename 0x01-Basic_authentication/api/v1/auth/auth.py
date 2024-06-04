@@ -10,8 +10,11 @@ class Auth:
         """Checks if a path requires authentication"""
         if path is None or excluded_paths is None:
             return True
-        elif path in excluded_paths or path + '/' in excluded_paths:
-            return False
+        for p in excluded_paths:
+            if path.startswith(p) or path + '/' == p:
+                return False
+        # elif path in excluded_paths or path + '/' in excluded_paths:
+        #     return False
         return True
 
     def authorization_header(self, request=None) -> str:
