@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """BasicAuth class"""
 from .auth import Auth
+from models.user import User
 import uuid
 
 
@@ -22,3 +23,12 @@ class SessionAuth(Auth):
         if not isinstance(session_id, str):
             return None
         return self.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None):
+        """Return a User instance based on a cookie value"""
+        if request:
+            cookie_value = self.session_cookie(request)
+            user_id = self.user_id_by_session_id.get(cookie_value)
+            user = User.get(user_id)
+
+            return user
