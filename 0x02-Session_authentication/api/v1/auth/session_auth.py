@@ -61,4 +61,4 @@ def login():
             return_value.set_cookie(getenv('SESSION_NAME'), session_id)
 
             return return_value
-    return jsonify({"error": "wrong password"}), 400
+    return jsonify({"error": "wrong password"}), 401
