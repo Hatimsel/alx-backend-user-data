@@ -41,7 +41,7 @@ class SessionAuth(Auth):
 @session_views.route('/auth_session/login', methods=['POST'],
                      strict_slashes=False)
 def login():
-    """"""
+    """log the user in"""
     email = request.form.get('email')
     password = request.form.get('password')
 
