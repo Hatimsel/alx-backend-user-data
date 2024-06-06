@@ -36,6 +36,7 @@ def login():
 @session_views.route('/api/v1/auth_session/logout', methods=['DELETE'],
                      strict_slashes=False)
 def delete_session():
+    """Delete the session"""
     from api.v1.app import auth
     if auth.destroy_session(request):
         return jsonify({}), 200
