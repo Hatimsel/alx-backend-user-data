@@ -32,3 +32,12 @@ class Auth:
         session.commit()
 
         return new_user
+
+    def valid_login(self, email: str, password: str) -> bool:
+        """Validate credentials"""
+        user = self._db._session.query(User).filter_by(email=email).first()
+        if user:
+            if bcrypt.checkpw(password.encode(), user.hashed_password):
+                return True
+
+        return False
