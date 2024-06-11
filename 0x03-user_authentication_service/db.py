@@ -29,7 +29,7 @@ class DB:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
         return self.__session
-    
+
     def add_user(self, email: str, hashed_password: str) -> User:
         """Add a User object to the database"""
         new_user = User(email=email, hashed_password=hashed_password)
