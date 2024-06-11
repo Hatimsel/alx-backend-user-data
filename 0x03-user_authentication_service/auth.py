@@ -23,9 +23,11 @@ class Auth:
 
         user = session.query(User).filter_by(email=email).first()
         if user:
-            raise ValueError(f'{user.email} already exists')
+            raise ValueError(f'User {user.email} already exists')
+
         hashed_pwd = _hash_password(password)
         new_user = User(email=email, hashed_password=hashed_pwd)
+
         session.add(new_user)
         session.commit()
 
