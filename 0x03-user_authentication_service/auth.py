@@ -47,3 +47,6 @@ class Auth:
     def _generate_uuid(self):
         """Generate a new uuid"""
         return str(uuid)
+
+a = Auth()
+a._generate_uuid
