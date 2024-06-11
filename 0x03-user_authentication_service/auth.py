@@ -3,6 +3,7 @@
 from db import DB
 from user import User
 import bcrypt
+import uuid
 
 
 def _hash_password(password: str) -> bytes:
@@ -41,3 +42,8 @@ class Auth:
                 return True
 
         return False
+    
+    @property
+    def _generate_uuid():
+        """Generate a new uuid"""
+        return str(uuid.uuid4())
