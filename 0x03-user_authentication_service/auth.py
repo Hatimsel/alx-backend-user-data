@@ -42,8 +42,8 @@ class Auth:
                 return True
 
         return False
-    
+
     @property
-    def _generate_uuid():
+    def _generate_uuid(self):
         """Generate a new uuid"""
         return str(uuid.uuid4())
