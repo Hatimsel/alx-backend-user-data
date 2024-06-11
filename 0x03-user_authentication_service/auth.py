@@ -46,7 +46,17 @@ class Auth:
     @property
     def _generate_uuid(self):
         """Generate a new uuid"""
-        return str(uuid)
+        return str(uuid.uuid4())
 
-a = Auth()
-a._generate_uuid
+    def create_session(self, email: str) -> str:
+        """Create a session id"""
+        session = self._db._session
+
+        user = session.query(User).filter_by(email=email).first()
+        if user:
+            session_id = self._generate_uuid
+            user.session_id = session_id
+
+            session.commit()
+
+            return session_id
