@@ -8,7 +8,6 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 from user import Base, User
-import bcrypt
 
 
 class DB:
@@ -60,3 +59,16 @@ class DB:
             return user
         else:
             raise NoResultFound
+        
+    def update_user(self, user_id: int, **kwargs) -> None:
+        """Update a user object"""
+        session = self._session
+        user = self.find_user_by({'user_id': user_id})
+
+        if user:
+            for k, v in kwargs.items():
+                if hasattr(user, k):
+                    setattr(user, v)
+                    session.commit()
+                else:
+                    raise ValueError
