@@ -59,7 +59,7 @@ class DB:
             return user
         else:
             raise NoResultFound
-        
+
     def update_user(self, user_id: int, **kwargs) -> None:
         """Update a user object"""
         session = self._session

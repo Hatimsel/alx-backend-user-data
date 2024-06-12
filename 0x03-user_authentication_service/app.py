@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Flask app"""
 from auth import Auth
-from flask import abort, Flask, jsonify, request, make_response
+from flask import abort, Flask, jsonify, request, make_response, Response
 
 app = Flask(__name__)
 AUTH = Auth()
@@ -30,7 +30,7 @@ def users():
 
 @app.route('/sessions', methods=['POST'],
            strict_slashes=False)
-def login():
+def login() -> Response:
     """Login the user"""
     email = request.form.get('email')
     password = request.form.get('password')
