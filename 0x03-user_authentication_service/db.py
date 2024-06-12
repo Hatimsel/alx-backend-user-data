@@ -63,7 +63,7 @@ class DB:
     def update_user(self, user_id: int, **kwargs) -> None:
         """Update a user object"""
         session = self._session
-        user = self.find_user_by({'user_id': user_id})
+        user = self.find_user_by(user_id=user_id)
 
         if user:
             for k, v in kwargs.items():
