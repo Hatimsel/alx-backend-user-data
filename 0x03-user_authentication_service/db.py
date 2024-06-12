@@ -48,20 +48,15 @@ class DB:
         """
         session = self._session
 
-        try:
-            query = session.query(User)
-            for k, v in kwargs.items():
-                if hasattr(User, k):
-                    query = query.filter(getattr(User, k) == v)
+        query = session.query(User)
+        for k, v in kwargs.items():
+            if hasattr(User, k):
+                query = query.filter(getattr(User, k) == v)
 
-                else:
-                    raise InvalidRequestError('Invalid')
-            user = query.first()
-            if user:
-                return user
             else:
-                raise NoResultFound
-        except InvalidRequestError:
-            pass
-        except NoResultFound:
-            pass
+                raise InvalidRequestError('Invalid')
+        user = query.first()
+        if user:
+            return user
+        else:
+            raise NoResultFound
