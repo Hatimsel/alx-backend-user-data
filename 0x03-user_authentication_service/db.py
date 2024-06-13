@@ -8,6 +8,7 @@ from sqlalchemy.orm.session import Session
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 from user import Base, User
+from typing import Union
 
 
 class DB:
@@ -40,7 +41,7 @@ class DB:
 
         return new_user
 
-    def find_user_by(self, **kwargs: dict) -> User:
+    def find_user_by(self, **kwargs: dict) -> Union[User, None]:
         """
         Take arbitrary keyword args and return the
         first row found in the users table

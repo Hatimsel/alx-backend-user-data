@@ -45,11 +45,11 @@ class Auth:
         return False
 
     @property
-    def _generate_uuid(self):
+    def _generate_uuid(self) -> str:
         """Generate a new uuid"""
         return str(uuid.uuid4())
 
-    def create_session(self, email: str) -> str:
+    def create_session(self, email: str) -> Union[str, None]:
         """Create a session id"""
         session = self._db._session
 
@@ -61,6 +61,7 @@ class Auth:
             session.commit()
 
             return session_id
+        return None
 
     def get_user_from_session_id(self, session_id: str) -> Union[User, None]:
         """Get the user from a session_id"""
@@ -75,3 +76,14 @@ class Auth:
         db = self._db
 
         db.update_user(user_id, session_id=None)
+
+    def get_reset_password_token(self, email: str) -> str:
+        """Generate reset password token"""
+        session = self._db._session
+
+        user = session.query(User).filter_by(email=email).first()
+        if user:
+            user.reset_token = str(uuid.uuid4())
+            session.commit()
+            return user.reset_token
+        raise ValueError
