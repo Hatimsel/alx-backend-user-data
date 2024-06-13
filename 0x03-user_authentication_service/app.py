@@ -12,14 +12,14 @@ AUTH = Auth()
 
 
 @app.route('/', strict_slashes=False)
-def root() -> Response:
+def root() -> str:
     """Root route for our app"""
     return jsonify({'message': 'Bienvenue'})
 
 
 @app.route('/users', methods=['POST'],
            strict_slashes=False)
-def users() -> Response:
+def users() -> str:
     """Register a user if not exists"""
     email = request.form.get('email')
     password = request.form.get('password')
@@ -28,43 +28,44 @@ def users() -> Response:
         AUTH.register_user(email, password)
         return jsonify({"email": email, "message": "user created"})
 
-    except ValueError:
+    except Exception:
         return jsonify({"message": "email already registered"}), 400
 
 
 @app.route('/sessions', methods=['POST'],
            strict_slashes=False)
-def login() -> Response:
-    """Login the user"""
-    email = request.form.get('email')
-    password = request.form.get('password')
+def login():
+    """POST Login the user endpoint"""
+    email = request.form.get('email', '')
+    password = request.form.get('password', '')
 
     if AUTH.valid_login(email, password):
         session_id = AUTH.create_session(email)
-        resp = make_response()
+        resp = make_response(jsonify({"email": email,
+                                      "message": "logged in"}))
         resp.set_cookie('session_id', session_id)
 
-        return jsonify({'email': email, 'message': 'logged in'})
+        return resp
     else:
         abort(401)
 
 
 @app.route('/sessions', methods=['DELETE'],
            strict_slashes=False)
-def logout() -> Response:
+def logout():
     """Log out the user and destroy the session id"""
     session_id = request.cookies.get('session_id')
     # print(session_id)
     if session_id:
         user = AUTH.get_user_from_session_id(session_id)
         if user:
-            AUTH.destroy_session(int(user.id))
+            AUTH.destroy_session(user.id)
             return redirect(url_for(root))
     abort(403)
 
 
 @app.route('/profile', strict_slashes=False)
-def profile() -> Response:
+def profile() -> str:
     """Serve the profile page"""
     session_id = request.cookies.get('session_id')
     if session_id:
@@ -76,9 +77,9 @@ def profile() -> Response:
 
 @app.route('/reset_password', methods=['POST'],
            strict_slashes=False)
-def get_reset_password_token() -> Response:
+def get_reset_password_token() -> str:
     """Get reset password token"""
-    email = request.form.get('email')
+    email = request.form.get('email', '')
     session = AUTH._db._session
 
     user = session.query(User).filter_by(email=email).first()
@@ -90,7 +91,7 @@ def get_reset_password_token() -> Response:
 
 @app.route('/reset_password', methods=['PUT'],
            strict_slashes=False)
-def update_password() -> Response:
+def update_password() -> str:
     """Update password end-point"""
     email = request.form.get('email')
     reset_token = request.form.get('reset_token')
@@ -100,7 +101,7 @@ def update_password() -> Response:
         AUTH.update_password(reset_token, new_password)
         return jsonify({"email": email, "message": "Password updated"})
     except ValueError:
-        abort(403) 
+        abort(403)
 
 
 if __name__ == '__main__':

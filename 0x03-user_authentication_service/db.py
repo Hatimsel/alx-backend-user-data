@@ -24,7 +24,7 @@ class DB:
         self.__session = None
 
     @property
-    def _session(self) -> Session:
+    def _session(self):
         """Memoized session object
         """
         if self.__session is None:
@@ -64,12 +64,12 @@ class DB:
     def update_user(self, user_id: int, **kwargs) -> None:
         """Update a user object"""
         session = self._session
-        user = self.find_user_by(user_id=user_id)
+        user = self.find_user_by(id=user_id)
 
         if user:
             for k, v in kwargs.items():
                 if hasattr(user, k):
-                    setattr(user, v)
+                    setattr(user, k, v)
                     session.commit()
                 else:
                     raise ValueError
