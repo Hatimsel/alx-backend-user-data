@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Flask app"""
 from auth import Auth
+from user import User
 import flask
 from flask import (redirect, url_for, abort,
                    Flask, jsonify, request,
@@ -70,6 +71,20 @@ def profile() -> Response:
         user = AUTH.get_user_from_session_id(session_id)
         if user:
             return jsonify({"email": user.email})
+    abort(403)
+
+
+@app.route('/reset_password', methods=['POST'],
+           strict_slashes=False)
+def get_reset_password_token() -> Response:
+    """Get reset password token"""
+    email = request.form.get('email')
+    session = AUTH._db._session
+
+    user = session.query(User).filter_by(email=email).first()
+    if user:
+        token = AUTH.get_reset_password_token(email)
+        return jsonify({"email": email, "reset_token": token})
     abort(403)
 
 
