@@ -26,16 +26,14 @@ class Auth:
 
     def register_user(self, email: str, password: str) -> User:
         """"Register the User object to db"""
-        session = self._db._session
-
-        user = session.query(User).filter_by(email=email).first()
-        if user:
+        try:
+            self._db.find_user_by(email=email)
             raise ValueError(f'User {user.email} already exists')
+        except Exception:
+            hashed_pwd = _hash_password(password)
+            new_user = self._db.add_user(email, hashed_pwd)
 
-        hashed_pwd = _hash_password(password)
-        new_user = self._db.add_user(email, hashed_pwd)
-
-        return new_user
+            return new_user
 
     def valid_login(self, email: str, password: str) -> bool:
         """Validate credentials"""
