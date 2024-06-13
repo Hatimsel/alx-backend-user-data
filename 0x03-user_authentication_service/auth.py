@@ -87,3 +87,16 @@ class Auth:
             session.commit()
             return user.reset_token
         raise ValueError
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """Update passord"""
+        session = self._db._session
+
+        user = session.query(User).filter_by(reset_token=reset_token).first()
+        if user:
+            new_pass = _hash_password(password)
+            user.hashed_password = new_pass
+            user.reset_token = None
+            session.commit()
+
+        raise ValueError
