@@ -3,6 +3,7 @@
 from db import DB
 from user import User
 from typing import Union
+from sqlalchemy.orm.exc import NoResultFound
 import bcrypt
 import uuid
 
@@ -29,7 +30,7 @@ class Auth:
         try:
             self._db.find_user_by(email=email)
             raise ValueError(f'User {email} already exists')
-        except Exception:
+        except NoResultFound:
             hashed_pwd = _hash_password(password)
             new_user = self._db.add_user(email, hashed_pwd)
 
