@@ -3,9 +3,9 @@
 from auth import Auth
 from user import User
 import flask
-from flask import (redirect, url_for, abort,
+from flask import (redirect, abort,
                    Flask, jsonify, request,
-                   make_response, Response)
+                   make_response)
 
 app = Flask(__name__)
 AUTH = Auth()
@@ -55,12 +55,11 @@ def login():
 def logout():
     """Log out the user and destroy the session id"""
     session_id = request.cookies.get('session_id')
-    # print(session_id)
     if session_id:
         user = AUTH.get_user_from_session_id(session_id)
         if user:
             AUTH.destroy_session(user.id)
-            return redirect(url_for(root))
+            return redirect('/')
     abort(403)
 
 
