@@ -13,20 +13,23 @@ def register_user(email: str, passord: str) -> None:
                                               'password': passord})
     assert resp.status_code == 200
 
+
 def log_in_wrong_password(email: str, password: str) -> None:
     """Test log in with wrong pass"""
     resp = requests.post(f'{url}sessions', data={'email': email,
-                                              'password': password})
+                                                 'password': password})
     assert resp.status_code == 401
+
 
 def log_in(email: str, password: str) -> str:
     """Test log in"""
     resp = requests.post(f'{url}sessions', data={'email': email,
-                                              'password': password})
+                                                 'password': password})
     assert resp.status_code == 200
     assert 'session_id' in resp.cookies
 
     return resp.cookies.get('session_id')
+
 
 def profile_unlogged() -> None:
     """Test profile endpoint without being logged in"""
@@ -34,33 +37,39 @@ def profile_unlogged() -> None:
 
     assert resp.status_code == 403
 
+
 def profile_logged(session_id: str) -> None:
     """Test profile endpoint logged in"""
     resp = requests.get(f'{url}profile', cookies={'session_id': session_id})
 
     assert resp.status_code == 200
 
+
 def log_out(session_id: str) -> None:
     """Test login out"""
-    resp = requests.delete(f'{url}sessions', cookies={'session_id': session_id})
+    resp = requests.delete(f'{url}sessions',
+                           cookies={'session_id': session_id})
 
     assert resp.status_code == 200
+
 
 def reset_password_token(email: str) -> str:
     """Test reset token enpoint"""
     resp = requests.post(f'{url}reset_password',
                          data={'email': email})
-    
+
     assert resp.status_code == 200
     return resp.cookies.get('session_id')
 
+
 def update_password(email: str, reset_token: str, new_password: str) -> None:
     """Test update pass endpoint"""
-    resp = requests.put(f'{url}reset_password', data={'email': email,
-                        'reset_token': reset_token,
-                        'new_password': new_password})
-    
+    resp = requests.put(f'{url}reset_password',
+                        data={'email': email, 'reset_token': reset_token,
+                              'new_password': new_password})
+
     assert resp.status_code == 200
+
 
 EMAIL = "guillaume@holberton.io"
 PASSWD = "b4l0u"
