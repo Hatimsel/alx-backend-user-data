@@ -41,7 +41,7 @@ class DB:
 
         return new_user
 
-    def find_user_by(self, **kwargs: dict) -> Union[User, None]:
+    def find_user_by(self, **kwargs: dict) -> User:
         """
         Take arbitrary keyword args and return the
         first row found in the users table
